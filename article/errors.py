@@ -1,5 +1,6 @@
 class ArticleNotFound(Exception):
     ...
+
+
 class UserNotFound(Exception):
     ...
-
