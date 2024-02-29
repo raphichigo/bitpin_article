@@ -5,8 +5,8 @@ class ArticleLogic:
     def __init__(self):
         self.article_dao = ArticleDao()
 
-    def get_article_list(self):
-        article_objects = self.article_dao.get_articles_with_rate_number_and_average_rate()
+    def get_article_list(self, page: int, page_size: int):
+        article_objects = self.article_dao.get_articles_with_rate_number_and_average_rate(page, page_size)
         articles_dicts = [
             {
                 "content": article.content,
