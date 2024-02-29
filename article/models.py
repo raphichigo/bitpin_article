@@ -9,3 +9,13 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Rating(models.Model):
+    article = models.ForeignKey(Article, related_name='ratings', on_delete=models.CASCADE)
+    rate = models.PositiveSmallIntegerField()
+    rater = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rates')
+
+    def __str__(self):
+        return f"{self.rate} from {self.rater} for {self.article}"
+
