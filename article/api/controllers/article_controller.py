@@ -5,6 +5,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.permissions import IsAuthenticated
 
+from article.api.serializers.article_serializers import ArticlesGetRequestSerializer, ArticlesGetResponseSerializer
 from article.logic.article_logic import ArticleLogic
 
 
@@ -16,17 +17,20 @@ class ArticlesController(APIView):
 
     @swagger_auto_schema(
         operation_summary="get all articles",
+        operation_id="get_all_articles",
         responses={
             200: ...
         }
 
     )
     def get(self, request, *args, **kwargs):
-        # todo: serialize request
-        page = int(request.GET.get('page', 1))
-        page_size = int(request.GET.get('page_size', 10))
-        articles = self.article_logic.get_article_list(page=page, page_size=page_size)
-        #  todo: add serializer for output
-        #  todo: pagination should be done!
+        serialized_data = ArticlesGetRequestSerializer(data=request.query_params)
+        if not serialized_data.is_valid():
+            return Response("bad request", status=status.HTTP_400_BAD_REQUEST)
+        page = serialized_data.validated_data.get('page')
+        page_size = serialized_data.validated_data.get('page_size')
 
-        return Response(articles, status=status.HTTP_200_OK)
+        articles = self.article_logic.get_article_list(page=page, page_size=page_size)
+        serialized_articles = ArticlesGetResponseSerializer(articles)
+
+        return Response(serialized_articles.data, status=status.HTTP_200_OK)
