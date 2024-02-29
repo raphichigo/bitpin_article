@@ -6,7 +6,8 @@ class Article(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
-
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField()
     def __str__(self):
         return self.title
 
